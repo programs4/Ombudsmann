@@ -1,0 +1,186 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="Adminn_MasterPage" %>
+
+<%@ Register Src="~/MessagesAlert.ascx" TagPrefix="uc1" TagName="MessagesAlert" %>
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js ie6 oldie" lang="en"><![endif]-->
+<!--[if IE 7]><html class="no-js ie7 oldie" lang="en"><![endif]-->
+<!--[if IE 8]><html class="no-js ie8 oldie" lang="en"><![endif]-->
+<!--[if IE 9]><html class="no-js ie9" lang="en"><![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en">
+<head id="MasterHead" runat="server">
+    <title>Ombudsman App </title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8">
+
+    <!-- CSS -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/Jquery-ui.css" rel="stylesheet" />
+    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/css/chosen.min.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="/Js/jquery-1.11.2.min.js"></script>
+    <script src="/Js/jquery-ui.js"></script>
+    <script src="/Js/Jquery.bootpag.js"></script>
+    <script type="text/javascript" src="/Js/bootstrap.js"></script>
+    <script src="/Js/chosen.jquery.min.js"></script>
+    <script src="/Js/datepicker-az.js"></script>
+    <script type="text/javascript" src="/js/custom.js"></script>
+    <script type="text/javascript" src="/js/alertpopup.js"></script>
+
+    <link href="/css/imagepositions.css" rel="stylesheet" type="text/css" />
+
+    <!--  Mobile Viewport Fix -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+
+        function setLeftBlackPanel() {
+            $('.mainmenu').css("height", document.body.scrollHeight);
+        }
+
+        $(window).resize(function () {
+            setLeftBlackPanel();
+        });
+
+        function loginControl() {
+            var returnValue = 'Logout';
+
+            $.ajax({
+                type: 'POST',
+                url: "/login/postcheck/",
+                async: false,
+                success: function (result) {
+                    returnValue = result;
+                },
+                error:
+                    function (errorThrown) {
+                        alert("Xəta baş verdi.");
+                    }
+            });
+
+            if (returnValue == 'Logout') {
+                window.open('/login/?return=close-page', 'Login', 'width=1000,location=0,menubar=no,height=720,scrollbars=no,resizable=no,fullscreen=no');
+            }
+
+            return returnValue;
+        }
+        function datetime() {
+            $(".form_datetime").datepicker({
+                changeMonth: true,
+                changeYear: true
+            }, $.datepicker.regional["az"]);
+        }
+
+        function printModal() {
+
+            var divToPrint = document.getElementById('modalDetails');
+
+            var newWin = window.open('', 'Print-Window');
+
+            newWin.document.open();
+
+            newWin.document.write('<html><link href="/css/styles.css" rel="stylesheet"><link href="/css/bootstrap.css" rel="stylesheet" type="text/css" /><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+
+            newWin.document.close();
+
+            setTimeout(function () { newWin.close(); }, 10);
+
+        }
+    </script>
+
+    <asp:ContentPlaceHolder ID="ContentPlaceHolderMasterHead" runat="server">
+    </asp:ContentPlaceHolder>
+
+</head>
+<body class="bodyFixPadding" onload="setTimeout('setLeftBlackPanel();',100);">
+
+    <form id="AspnetForm" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+
+        <uc1:MessagesAlert runat="server" ID="MessagesAlert" />
+
+        <asp:Panel ID="PnlHeaderRoot" runat="server" Style="min-width: 780px; background-color: #F2F2F2; height: 90px" CssClass="divHeader printStyle">
+
+            <div class="hd-left">
+                <img src="/Images/logo.png" />
+            </div>
+
+            <div class="hd-left" style="background-color: #F2F2F2;">
+                <p style="padding: 10px; padding-left: 0px; font-size: 11pt;">
+                    <asp:Literal ID="LtrTitle" runat="server"></asp:Literal>
+                </p>
+            </div>
+
+            <div class="hd-right">
+                <div class="u-menu">
+                    <span class="opener">
+                        <asp:Literal ID="LtrAdminFullName" runat="server"></asp:Literal>
+                        <img src="/images/adminn/ico4.png" alt="arrow">
+                    </span>
+                    <ul>
+                        <li><a href="<%=string.Format("/tools/main/password") %>">Şifrənin dəyişdirilməsi</a></li>
+                        <li><a href="/exit/">Çıxış</a></li>
+                    </ul>
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:Panel ID="PnlLeft" runat="server" CssClass="mainmenu printStyle" Style="display: none; z-index: 99999; width: 275px">
+
+            <a href="<%=string.Format("/tools/{0}","main") %>" class="m-item">
+                <img src="/images/adminn/leftmenuicon/menu10.png" alt="img-menu" />
+                <asp:Label CssClass="um-text" ID="LblName" runat="server" Text="Tənzimləmələr"></asp:Label>
+            </a>
+
+            <a href="<%=string.Format("/tools/{0}","auditsorganizations") %>" class="m-item">
+                <img src="/images/adminn/leftmenuicon/auditorganization.png" alt="img-menu" />
+                <asp:Label CssClass="um-text" ID="Label4" runat="server" Text="Baxış keçirilən müəssisələr"></asp:Label>
+            </a>
+
+            <a href="<%=string.Format("/tools/{0}","auditsorganizationsmeetingpersons") %>" class="m-item">
+                <img src="/images/adminn/leftmenuicon/meetingperson.png" alt="img-menu" />
+                <asp:Label CssClass="um-text" ID="Label2" runat="server" Text="Baxış zamanı görüşülən şəxslər"></asp:Label>
+            </a>
+
+            <a href="<%=string.Format("/tools/{0}","individualcomplaints") %>" class="m-item">
+                <img src="/images/adminn/leftmenuicon/individualcomplaint.png" alt="img-menu" />
+                <asp:Label CssClass="um-text" ID="Label1" runat="server" Text="Fərdi şikayətlər"></asp:Label>
+            </a>
+
+            <a href="<%=string.Format("/tools/{0}","callcenter") %>" class="m-item">
+                <img src="/images/adminn/leftmenuicon/callcenter.png" alt="img-menu" />
+                <asp:Label CssClass="um-text" ID="Label3" runat="server" Text="Çağrı mərkəzinə gələn şikayətlər"></asp:Label>
+            </a>
+
+            <a href="<%=string.Format("/tools/{0}","datalist") %>" class="m-item">
+                <img src="/images/adminn/leftmenuicon/menu60.png" alt="img-menu" />
+                <asp:Label CssClass="um-text" ID="Label5" runat="server" Text="Sorağçalar"></asp:Label>
+            </a>
+
+            <asp:Panel ID="PnlUserWorker" runat="server">
+                <a href="<%=string.Format("/tools/{0}","users") %>" class="m-item">
+                    <img src="/images/adminn/leftmenuicon/users.png" alt="img-menu" />
+                    <asp:Label CssClass="um-text" ID="Label6" runat="server" Text="İşçilər"></asp:Label>
+                </a>
+            </asp:Panel>
+            <a href="/exit/" class="m-item">
+                <img src="/images/adminn/leftmenuicon/exit.png" alt="img-exit" />
+                <span class="um-text">Çıxış</span>
+            </a>
+        </asp:Panel>
+
+        <asp:Panel ID="PnlContent" runat="server" CssClass="content" Style="padding-top: 10px; margin-top: 100px; margin-left: 290px;">
+            <!-- All content here -->
+            <asp:ContentPlaceHolder ID="ContentPlaceHolderMasterBody" runat="server">
+            </asp:ContentPlaceHolder>
+        </asp:Panel>
+    </form>
+</body>
+</html>

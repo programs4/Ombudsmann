@@ -1,0 +1,25 @@
+﻿
+.message-alert {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding: 25px;
+    font-size: 10pt;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    z-index: 999999;
+    box-shadow: 1px 1px 4px 1px rgba(106,106,106,0.5);
+    opacity: 0.97;
+    display: none;
+}
+
+    .message-alert img {
+        height: 30px;
+        margin-bottom: 3px;
+        vertical-align: middle;
+    }
+
+    .message-alert .close {
+        float: right;
+    }
